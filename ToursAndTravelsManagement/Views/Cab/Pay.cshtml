@@ -1,0 +1,556 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* <h2>Pay Using UPI</h2>
+
+<img src="data:image/png;base64,@ViewBag.QrCode" />
+
+<p><b>Amount:</b> ₹@ViewBag.Amount</p>
+
+<form asp-action="ConfirmPayment" method="post">
+    <input type="hidden" name="bookingId" value="@ViewBag.BookingId" />
+
+    <label>Enter UTR Number</label>
+    <input type="text" name="utr" required class="form-control" />
+
+    <button type="submit" class="btn btn-success mt-2">
+        I Have Paid
+    </button>
+</form> *@
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <!-- Payment Header -->
+            <div class="text-center mb-5">
+                <div class="icon-wrapper bg-success bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                    <i class="fas fa-rupee-sign fa-2x text-success"></i>
+                </div>
+                <h1 class="h2 fw-bold mb-2">Complete Your Payment</h1>
+                <p class="text-muted">Secure & easy payment via UPI for your tour booking</p>
+
+                <!-- Booking Info -->
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <span class="badge bg-primary me-3">Booking ID: @ViewBag.BookingId</span>
+                    <span class="badge bg-info">Tour & Travels Payment</span>
+                </div>
+            </div>
+
+            <!-- Payment Card -->
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <!-- Payment Header -->
+                <div class="card-header bg-primary text-white py-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0">
+                                <i class="fas fa-qrcode me-2"></i>UPI QR Payment
+                            </h4>
+                            <p class="mb-0 opacity-75">Scan to pay instantly</p>
+                        </div>
+                        <div class="text-end">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-shield-alt fa-2x me-2 opacity-50"></i>
+                                <div>
+                                    <small class="d-block opacity-75">Secure</small>
+                                    <small class="d-block">Payment</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <!-- Amount Display -->
+                    <div class="text-center mb-5">
+                        <div class="amount-card bg-light rounded-3 p-4 d-inline-block">
+                            <p class="text-muted mb-1">Total Amount</p>
+                            <h1 class="display-4 fw-bold text-success mb-0">
+                                ₹@ViewBag.Amount
+                            </h1>
+                            <p class="text-muted mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Inclusive of all taxes and charges
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Section -->
+                    <div class="text-center mb-5">
+                        <div class="qr-container position-relative d-inline-block">
+                            <!-- QR Code Frame -->
+                            <div class="qr-frame p-4 bg-white rounded-3 shadow-sm border">
+                                <img src="data:image/png;base64,@ViewBag.QrCode"
+                                     class="img-fluid qr-code"
+                                     alt="UPI QR Code"
+                                     style="width: 280px; height: 280px; object-fit: contain;">
+                            </div>
+
+                            <!-- QR Code Badges -->
+                            <div class="qr-badges position-absolute top-0 start-0 end-0 d-flex justify-content-between">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle me-1"></i>Secure
+                                </span>
+                                <span class="badge bg-info">
+                                    <i class="fas fa-bolt me-1"></i>Instant
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- QR Code Instructions -->
+                        <div class="mt-4">
+                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                <i class="fas fa-mobile-alt text-primary me-2"></i>
+                                <span>Open your UPI app and scan the QR code</span>
+                            </div>
+                            <div class="alert alert-info bg-light border-0">
+                                <div class="d-flex">
+                                    <i class="fas fa-lightbulb text-warning mt-1 me-3"></i>
+                                    <div>
+                                        <h6 class="alert-heading mb-2">How to pay?</h6>
+                                        <ol class="mb-0 ps-3 small">
+                                            <li>Open any UPI app (GPay, PhonePe, Paytm, etc.)</li>
+                                            <li>Tap on "Scan QR Code"</li>
+                                            <li>Point camera at this QR code</li>
+                                            <li>Enter UPI PIN to complete payment</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UTR Form Section -->
+                    <div class="payment-form-section">
+                        <div class="section-header mb-4">
+                            <h5 class="fw-bold mb-2">
+                                <i class="fas fa-receipt me-2"></i>Payment Confirmation
+                            </h5>
+                            <p class="text-muted mb-0">Enter UTR number after successful payment</p>
+                        </div>
+
+                        <form asp-action="ConfirmPayment" method="post" class="payment-form">
+                            <input type="hidden" name="bookingId" value="@ViewBag.BookingId" />
+
+                            <div class="form-card bg-light rounded-3 p-4">
+                                <!-- UTR Input -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-hashtag me-2"></i>UTR/Transaction Reference Number
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white">
+                                            <i class="fas fa-receipt text-primary"></i>
+                                        </span>
+                                        <input type="text"
+                                               name="utr"
+                                               class="form-control form-control-lg"
+                                               placeholder="Enter 12-digit UTR number"
+                                               required
+                                               pattern="[A-Za-z0-9]{12}"
+                                               title="Please enter a valid 12-character UTR number">
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Find this in your bank or UPI app transaction details
+                                    </div>
+                                </div>
+
+                                <!-- Payment Info -->
+                                <div class="payment-info mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Booking ID:</span>
+                                        <span class="fw-bold">@ViewBag.BookingId</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Payment Method:</span>
+                                        <span class="fw-bold text-success">UPI QR Code</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Amount:</span>
+                                        <span class="fw-bold text-success">₹@ViewBag.Amount</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Status:</span>
+                                        <span class="badge bg-warning">Pending</span>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg py-3 fw-bold">
+                                        <i class="fas fa-check-circle me-2"></i>Confirm Payment
+                                    </button>
+
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="showHelpModal()">
+                                        <i class="fas fa-question-circle me-2"></i>Need Help?
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Payment Security -->
+                    <div class="mt-5 pt-4 border-top">
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="security-item p-3">
+                                    <i class="fas fa-lock fa-2x text-primary mb-2"></i>
+                                    <h6 class="mb-1">Secure Payment</h6>
+                                    <p class="text-muted small mb-0">256-bit SSL encryption</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="security-item p-3">
+                                    <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                                    <h6 class="mb-1">Safe & Protected</h6>
+                                    <p class="text-muted small mb-0">Your data is secure</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="security-item p-3">
+                                    <i class="fas fa-headset fa-2x text-info mb-2"></i>
+                                    <h6 class="mb-1">24/7 Support</h6>
+                                    <p class="text-muted small mb-0">We're here to help</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer bg-light border-0 py-3">
+                    <div class="text-center">
+                        <p class="text-muted small mb-2">
+                            <i class="fas fa-lock me-1"></i>
+                            Your payment is secured by our payment partners
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/UPI-Logo-vector.svg"
+                                 height="30" alt="UPI" class="opacity-75">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Bhim_logo.svg"
+                                 height="30" alt="BHIM" class="opacity-75">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/GPay_Logo.svg"
+                                 height="30" alt="Google Pay" class="opacity-75">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Help -->
+            <div class="text-center mt-4">
+                <p class="text-muted small">
+                    <i class="fas fa-clock me-1"></i>
+                    Payment verification usually takes 2-3 minutes
+                </p>
+                <a href="#" class="text-decoration-none small" data-bs-toggle="modal" data-bs-target="#paymentHelp">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    Having trouble with payment?
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Modal -->
+<div class="modal fade" id="paymentHelp" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-life-ring me-2"></i>Payment Help
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="accordion" id="helpAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#help1">
+                                Where to find UTR number?
+                            </button>
+                        </h2>
+                        <div id="help1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>In Google Pay: Go to Transactions → Select payment → UTR in details</li>
+                                    <li>In PhonePe: Profile → Transaction History → Select payment → Reference No.</li>
+                                    <li>In Paytm: Passbook → Select transaction → Transaction Details</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help2">
+                                Payment not reflecting?
+                            </button>
+                        </h2>
+                        <div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <p>Sometimes payments take 5-10 minutes to reflect. Please:</p>
+                                <ol>
+                                    <li>Wait for 10 minutes</li>
+                                    <li>Check your bank statement</li>
+                                    <li>Contact support if still pending</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="tel:+911234567890" class="btn btn-primary">
+                    <i class="fas fa-phone me-2"></i>Call Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom Styles for Payment Page */
+    .qr-container {
+        position: relative;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .qr-frame {
+        border: 2px dashed #dee2e6;
+        position: relative;
+        z-index: 1;
+        background: white;
+    }
+
+    .qr-code {
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+        .qr-code:hover {
+            transform: scale(1.02);
+        }
+
+    .qr-badges {
+        top: -10px;
+        padding: 0 20px;
+        z-index: 2;
+    }
+
+    .amount-card {
+        min-width: 300px;
+        border-left: 4px solid #28a745;
+        transition: all 0.3s ease;
+    }
+
+        .amount-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.1);
+        }
+
+    .payment-form-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+
+    .section-header {
+        padding-bottom: 15px;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .form-card {
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-group-text {
+        border-right: none;
+        background: white;
+    }
+
+    .form-control {
+        border-left: none;
+    }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        }
+
+    .form-control-lg {
+        padding: 15px;
+        font-size: 1.1rem;
+    }
+
+    .payment-info {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+    .security-item {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+    }
+
+        .security-item:hover {
+            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .amount-card {
+            min-width: 100%;
+        }
+
+        .qr-container {
+            padding: 15px;
+        }
+
+        .qr-code {
+            width: 220px !important;
+            height: 220px !important;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+    }
+
+    /* Animation for QR code */
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+        }
+    }
+
+    .qr-container {
+        animation: pulse 2s infinite;
+    }
+</style>
+
+<script>
+    // QR Code size adjustment
+    document.addEventListener('DOMContentLoaded', function () {
+        const qrCode = document.querySelector('.qr-code');
+        if (qrCode) {
+            // Set optimal size for QR code
+            qrCode.style.width = '280px';
+            qrCode.style.height = '280px';
+            qrCode.style.objectFit = 'contain';
+        }
+
+        // UTR input validation
+        const utrInput = document.querySelector('input[name="utr"]');
+        if (utrInput) {
+            utrInput.addEventListener('input', function () {
+                this.value = this.value.toUpperCase();
+            });
+        }
+
+        // Show help modal function
+        window.showHelpModal = function () {
+            const helpModal = new bootstrap.Modal(document.getElementById('paymentHelp'));
+            helpModal.show();
+        };
+
+        // Add copy booking ID functionality
+        const copyBookingId = function () {
+            const bookingId = '@ViewBag.BookingId';
+            navigator.clipboard.writeText(bookingId).then(() => {
+                alert('Booking ID copied to clipboard!');
+            });
+        };
+
+        // Add event listener to booking ID badge
+        const bookingIdBadge = document.querySelector('.badge.bg-primary');
+        if (bookingIdBadge) {
+            bookingIdBadge.style.cursor = 'pointer';
+            bookingIdBadge.title = 'Click to copy';
+            bookingIdBadge.addEventListener('click', copyBookingId);
+        }
+
+        // Auto-refresh QR code every 5 minutes (300000 ms)
+        setInterval(() => {
+            console.log('QR Code refreshed (would refresh in production)');
+            // In production, you might want to fetch a new QR code
+            // fetch('/Payment/RefreshQrCode?bookingId=@ViewBag.BookingId')
+            //   .then(response => response.json())
+            //   .then(data => {
+            //       if (data.newQrCode) {
+            //           document.querySelector('.qr-code').src = 'data:image/png;base64,' + data.newQrCode;
+            //       }
+            //   });
+        }, 300000);
+
+        // Payment timer
+        let paymentTimer = 300; // 5 minutes in seconds
+        const timerElement = document.createElement('div');
+        timerElement.className = 'text-center mt-3';
+        timerElement.innerHTML = `
+                <div class="alert alert-warning d-inline-flex align-items-center">
+                    <i class="fas fa-clock me-2"></i>
+                    <span id="timerText">Complete payment within: <span id="timer">05:00</span></span>
+                </div>
+            `;
+
+        document.querySelector('.qr-container').parentNode.insertBefore(timerElement, document.querySelector('.qr-container').nextSibling);
+
+        const timerDisplay = document.getElementById('timer');
+        const timerInterval = setInterval(() => {
+            paymentTimer--;
+            const minutes = Math.floor(paymentTimer / 60);
+            const seconds = paymentTimer % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (paymentTimer <= 0) {
+                clearInterval(timerInterval);
+                timerElement.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            QR Code expired! Please refresh the page for new QR code.
+                        </div>
+                    `;
+            }
+        }, 1000);
+    });
+</script>
+

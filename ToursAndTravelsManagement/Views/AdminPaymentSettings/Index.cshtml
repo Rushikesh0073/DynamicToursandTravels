@@ -1,0 +1,118 @@
+﻿@* @model ToursAndTravelsManagement.Models.PaymentSetting
+
+<h2>UPI Payment Settings</h2>
+
+<form asp-action="Save" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label>UPI ID</label>
+        <input asp-for="UpiId" class="form-control" placeholder="owner@upi" required />
+    </div>
+
+    <div class="form-group mt-2">
+        <label>UPI Name</label>
+        <input asp-for="UpiName" class="form-control" placeholder="Tours & Travels" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">
+        Save
+    </button>
+</form>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["Success"]
+    </div>
+}
+ *@
+
+ @model ToursAndTravelsManagement.Models.PaymentSetting
+
+@{
+    ViewData["Title"] = "UPI Payment Settings";
+}
+
+<h2 class="mb-3">UPI Payment Settings</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (Model == null)
+{
+    <!-- No UPI configured yet -->
+    <div class="alert alert-warning">
+        No UPI details configured. Please add one.
+    </div>
+
+    <form asp-action="Save" method="post">
+        <div class="form-group">
+            <label>UPI ID</label>
+            <input name="UpiId" class="form-control" placeholder="owner@upi" required />
+        </div>
+
+        <div class="form-group mt-2">
+            <label>UPI Name</label>
+            <input name="UpiName" class="form-control" placeholder="Tours & Travels" required />
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">
+            Save UPI
+        </button>
+    </form>
+}
+else
+{
+    <!-- UPI already exists -->
+    <table class="table table-bordered">
+        <tr>
+            <th>UPI ID</th>
+            <td>@Model.UpiId</td>
+        </tr>
+        <tr>
+            <th>UPI Name</th>
+            <td>@Model.UpiName</td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <h4>Update UPI Details</h4>
+
+    <form asp-action="Save" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label>UPI ID</label>
+            <input asp-for="UpiId" class="form-control" required />
+        </div>
+
+        <div class="form-group mt-2">
+            <label>UPI Name</label>
+            <input asp-for="UpiName" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">
+            Update
+        </button>
+
+        <button type="submit"
+                formaction="@Url.Action("Delete", "AdminPaymentSettings", new { id = Model.Id })"
+                class="btn btn-danger mt-3 ms-2"
+                onclick="return confirm('Are you sure you want to delete UPI settings?');">
+            Delete
+        </button>
+    </form>
+}

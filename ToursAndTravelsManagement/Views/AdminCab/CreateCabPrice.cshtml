@@ -1,0 +1,489 @@
+﻿@model ToursAndTravelsManagement.Models.CabRoutePrice
+@{
+    ViewData["Title"] = "Add New Cab Price";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-money-bill-wave mr-2"></i>Add New Cab Price
+            </h1>
+            <p class="text-muted mb-0">Configure pricing for cabs on specific routes</p>
+        </div>
+        <a asp-action="ManageCabPrices" class="btn btn-secondary">
+            <i class="fas fa-arrow-left mr-1"></i> Back to List
+        </a>
+    </div>
+
+    <!-- Alerts -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i> @TempData["Error"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-primary text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-plus-circle mr-2"></i>Cab Price Configuration
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateCabPrice" method="post" id="createCabPriceForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Cab and Route Selection -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="CabId" class="control-label font-weight-bold">
+                                        <i class="fas fa-car mr-1"></i> Select Cab *
+                                    </label>
+                                    <select asp-for="CabId" class="form-control" id="cabSelect" required>
+                                        <option value="">-- Select Cab --</option>
+                                        @if (ViewBag.Cabs != null)
+                                        {
+                                            foreach (SelectListItem cab in ViewBag.Cabs)
+                                            {
+                                                <option value="@cab.Value">@cab.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="CabId" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Select the cab you want to price
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="RouteId" class="control-label font-weight-bold">
+                                        <i class="fas fa-route mr-1"></i> Select Route *
+                                    </label>
+                                    <select asp-for="RouteId" class="form-control" id="routeSelect" required>
+                                        <option value="">-- Select Route --</option>
+                                        @if (ViewBag.Routes != null)
+                                        {
+                                            foreach (SelectListItem route in ViewBag.Routes)
+                                            {
+                                                <option value="@route.Value">@route.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="RouteId" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Select the route for this cab
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Journey Type and Price -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="JourneyType" class="control-label font-weight-bold">
+                                        <i class="fas fa-directions mr-1"></i> Journey Type *
+                                    </label>
+                                    <select asp-for="JourneyType" class="form-control" id="journeyTypeSelect" required>
+                                        <option value="">-- Select Journey Type --</option>
+                                        @if (ViewBag.JourneyTypes != null)
+                                        {
+                                            foreach (SelectListItem item in ViewBag.JourneyTypes)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="JourneyType" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Select the type of journey
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Price" class="control-label font-weight-bold">
+                                        <i class="fas fa-rupee-sign mr-1"></i> Price (₹) *
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">₹</span>
+                                        </div>
+                                        <input asp-for="Price" class="form-control" type="number" min="0" step="0.01" required />
+                                    </div>
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Enter the total price for this route
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Services Information -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="IncludedServices" class="control-label font-weight-bold">
+                                        <i class="fas fa-check-circle mr-1 text-success"></i> Included Services
+                                    </label>
+                                    <textarea asp-for="IncludedServices" class="form-control" rows="3"
+                                              placeholder="Enter services included in the price (comma separated)"></textarea>
+                                    <span asp-validation-for="IncludedServices" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Example: Toll charges, Parking, Driver charges
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ExcludedServices" class="control-label font-weight-bold">
+                                        <i class="fas fa-times-circle mr-1 text-danger"></i> Excluded Services
+                                    </label>
+                                    <textarea asp-for="ExcludedServices" class="form-control" rows="3"
+                                              placeholder="Enter services NOT included in the price (comma separated)"></textarea>
+                                    <span asp-validation-for="ExcludedServices" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Example: Meals, Accommodation, Entrance fees
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ExtraCharges" class="control-label font-weight-bold">
+                                        <i class="fas fa-plus-circle mr-1 text-warning"></i> Extra Charges (Optional)
+                                    </label>
+                                    <input asp-for="ExtraCharges" class="form-control"
+                                           placeholder="Example: ₹500 for night travel" />
+                                    <span asp-validation-for="ExtraCharges" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Additional charges that may apply
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Notes" class="control-label font-weight-bold">
+                                        <i class="fas fa-sticky-note mr-1 text-info"></i> Notes (Optional)
+                                    </label>
+                                    <input asp-for="Notes" class="form-control"
+                                           placeholder="Example: Free cancellation within 24 hours" />
+                                    <span asp-validation-for="Notes" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle mr-1"></i>Additional information for customers
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-group mb-4">
+                            <label asp-for="TermsAndConditions" class="control-label font-weight-bold">
+                                <i class="fas fa-file-contract mr-1"></i> Terms & Conditions (Optional)
+                            </label>
+                            <textarea asp-for="TermsAndConditions" class="form-control" rows="4"
+                                      placeholder="Enter terms and conditions for this cab service"></textarea>
+                            <span asp-validation-for="TermsAndConditions" class="text-danger"></span>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle mr-1"></i>Important terms that customers should know
+                            </small>
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="form-group form-check mb-4">
+                            <input class="form-check-input" asp-for="IsAvailable" checked />
+                            <label class="form-check-label font-weight-bold" asp-for="IsAvailable">
+                                <i class="fas fa-toggle-on mr-1"></i> Make this price available for booking
+                            </label>
+                            <small class="form-text text-muted d-block">
+                                <i class="fas fa-info-circle mr-1"></i>If checked, customers can book this cab for the selected route
+                            </small>
+                        </div>
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" asp-for="CreatedDate" value="@DateTime.Now" />
+                        <input type="hidden" asp-for="CreatedBy" value="@User.Identity?.Name" />
+                        <input type="hidden" asp-for="IsActive" value="true" />
+
+                        <!-- Action Buttons -->
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                                    <i class="fas fa-times mr-1"></i> Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save mr-1"></i> Create Cab Price
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Information -->
+        <div class="col-lg-4">
+            <!-- Information Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-info text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-info-circle mr-2"></i>Important Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6 class="font-weight-bold text-primary mb-3">
+                        <i class="fas fa-lightbulb mr-2"></i>How to Add Multiple Cabs for Same Route
+                    </h6>
+                    <ol class="pl-3 mb-4">
+                        <li class="mb-2">Select a route (e.g., Mumbai → Pune)</li>
+                        <li class="mb-2">Select a cab (e.g., Toyota Innova)</li>
+                        <li class="mb-2">Set the price and save</li>
+                        <li class="mb-2">Repeat for other cabs on same route</li>
+                    </ol>
+
+                    <div class="alert alert-warning">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>Note
+                        </h6>
+                        <p class="mb-0 small">
+                            You can add multiple cabs for the same route. When users search for that route,
+                            they will see all available cabs with their prices.
+                        </p>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="mt-4">
+                        <h6 class="font-weight-bold text-dark mb-3">
+                            <i class="fas fa-chart-bar mr-2"></i>Quick Stats
+                        </h6>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="text-center p-2 border rounded">
+                                    <div class="h5 mb-0 text-primary" id="totalCabsCount">0</div>
+                                    <small class="text-muted">Total Cabs</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="text-center p-2 border rounded">
+                                    <div class="h5 mb-0 text-success" id="totalRoutesCount">0</div>
+                                    <small class="text-muted">Total Routes</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Calculator Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-success text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-calculator mr-2"></i>Price Calculator
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Base Price per KM</label>
+                        <input type="number" class="form-control mb-2" id="basePricePerKm"
+                               placeholder="Enter base price per km" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Distance (KM)</label>
+                        <input type="number" class="form-control mb-2" id="distanceKm"
+                               placeholder="Enter distance" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Multiplier (Journey Type)</label>
+                        <select class="form-control mb-3" id="journeyMultiplier">
+                            <option value="1">One Way (1x)</option>
+                            <option value="1.2">Outstation (1.2x)</option>
+                            <option value="0.8">Local (0.8x)</option>
+                            <option value="1.1">Transfer (1.1x)</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-outline-success btn-block" onclick="calculatePrice()">
+                        <i class="fas fa-calculator mr-1"></i> Calculate Estimated Price
+                    </button>
+                    <div class="mt-3 text-center">
+                        <h5 id="calculatedPrice" class="text-success font-weight-bold">₹0.00</h5>
+                        <small class="text-muted">Estimated Total Price</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #4e73df;
+                box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+            }
+
+        .input-group-text {
+            background-color: #f8f9fc;
+            border-color: #e0e0e0;
+        }
+
+        .form-check-input:checked {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .font-weight-bold {
+            color: #2d3748;
+        }
+
+        .text-muted {
+            color: #718096 !important;
+        }
+
+        .border {
+            border: 1px solid #e9ecef !important;
+        }
+
+        .rounded {
+            border-radius: 8px !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Get counts from server
+            $.get('@Url.Action("GetCounts", "AdminCab")', function (data) {
+                if (data.totalCabs) {
+                    $('#totalCabsCount').text(data.totalCabs);
+                }
+                if (data.totalRoutes) {
+                    $('#totalRoutesCount').text(data.totalRoutes);
+                }
+            });
+
+            // Auto-populate price based on cab selection
+            $('#cabSelect').change(function () {
+                var cabId = $(this).val();
+                if (cabId) {
+                    $.get('@Url.Action("GetCabDetails", "AdminCab")', { id: cabId }, function (data) {
+                        if (data.success && data.basePricePerKM) {
+                            $('#basePricePerKm').val(data.basePricePerKM);
+                        }
+                    });
+                }
+            });
+
+            // Auto-populate distance based on route selection
+            $('#routeSelect').change(function () {
+                var routeId = $(this).val();
+                if (routeId) {
+                    $.get('@Url.Action("GetRouteDetails", "AdminCab")', { id: routeId }, function (data) {
+                        if (data.success && data.distance) {
+                            $('#distanceKm').val(data.distance);
+                        }
+                    });
+                }
+            });
+
+            // Auto-fill price field when calculated
+            $('#calculatedPrice').click(function () {
+                var calculatedPrice = $(this).text().replace('₹', '').replace(/,/g, '').trim();
+                if (calculatedPrice && calculatedPrice !== '0.00') {
+                    $('#Price').val(calculatedPrice);
+                    alert('Price has been auto-filled!');
+                }
+            });
+
+            // Form validation
+            $('#createCabPriceForm').on('submit', function (e) {
+                var cabId = $('#cabSelect').val();
+                var routeId = $('#routeSelect').val();
+                var journeyType = $('#journeyTypeSelect').val();
+                var price = $('#Price').val();
+
+                if (!cabId || !routeId || !journeyType || !price) {
+                    e.preventDefault();
+                    alert('Please fill all required fields marked with *.');
+                    return false;
+                }
+
+                return true;
+            });
+        });
+
+        function calculatePrice() {
+            var basePrice = parseFloat($('#basePricePerKm').val()) || 0;
+            var distance = parseFloat($('#distanceKm').val()) || 0;
+            var multiplier = parseFloat($('#journeyMultiplier').val()) || 1;
+
+            if (basePrice > 0 && distance > 0) {
+                var calculatedPrice = basePrice * distance * multiplier;
+
+                // Add 10% service charge
+                calculatedPrice = calculatedPrice * 1.10;
+
+                // Round to nearest 100
+                calculatedPrice = Math.round(calculatedPrice / 100) * 100;
+
+                $('#calculatedPrice').text('₹' + calculatedPrice.toLocaleString('en-IN'));
+            } else {
+                alert('Please enter base price and distance to calculate.');
+            }
+        }
+    </script>
+}
