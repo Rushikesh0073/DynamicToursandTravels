@@ -19,7 +19,7 @@ namespace ToursAndTravelsManagement.Controllers
             _roleManager = roleManager;
         }
 
-        //fkshfahf GET: Account/Register
+        // GET: Account/Register
         public IActionResult Register()
         {
             Log.Information("Register page accessed.");
